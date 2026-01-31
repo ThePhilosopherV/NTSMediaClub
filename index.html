@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTS Media Club - Minimalist Aesthetic</title>
+
+  <style>
+    /* Reset & Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:italic,wght@700&display=swap');
+
+    :root {
+      --bg-color: #f3f6fb;
+      --accent-color: #a5b4fc;
+      --text-main: #2f3e46;
+      --glass-bg: rgba(255, 255, 255, 0.75);
+    }
+
+    html {
+      scroll-behavior: smooth; 
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 10% 20%, rgba(184, 192, 255, 0.2) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(255, 200, 221, 0.2) 0%, transparent 40%);
+      z-index: -1;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 30px;
+      padding: 12px 30px;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 40px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      z-index: 999;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .navbar a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background: #ff9aa2;
+      transition: 0.3s;
+    }
+
+    .navbar a:hover::after { width: 100%; }
+
+    .hero {
+      height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      padding: 5px;
+      margin-bottom: 25px;
+      object-fit: cover;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      letter-spacing: 5px;
+      font-weight: 700;
+      color: #2f3e46;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #84a59d;
+    }
+
+    .section-title {
+      text-align: center;
+      margin: 80px 0 50px;
+    }
+
+    .section-title h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 2.2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      padding: 0 10%;
+    }
+
+    .member-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+      transition: 0.4s;
+    }
+
+    .member-card img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      transition: 0.6s;
+    }
+
+    .member-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(47, 62, 70, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: 0.4s;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .member-card:hover .member-overlay { opacity: 1; }
+    .member-card:hover img { transform: scale(1.1); }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      padding: 0 12% 100px;
+    }
+
+    .activity-card {
+      background: var(--glass-bg);
+      border-radius: 30px;
+      padding: 15px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+      transition: 0.4s;
+    }
+
+    .activity-card:hover { transform: translateY(-10px); }
+
+    .activity-img, video {
+      width: 100%;
+      height: 250px;
+      border-radius: 20px;
+      object-fit: cover;
+    }
+
+    .activity-text { padding: 20px 10px; text-align: center; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: 0.8s ease-out;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .contact-section {
+      padding: 80px 12%;
+      background: rgba(255,255,255,0.4);
+      margin-top: 50px;
+    }
+
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 50px;
+    }
+
+    .contact-box {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .contact-item { margin-bottom: 15px; }
+    .contact-item span { display: block; font-size: 0.7rem; color: #999; text-transform: uppercase; }
+
+    .bg-blob {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(165,180,252,0.2), transparent 70%);
+      filter: blur(50px);
+      z-index: -2;
+    }
+    .blob-1 { top: -100px; left: -100px; }
+    .blob-2 { bottom: -100px; right: -100px; }
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar">
+    <a href="#members">Thành viên</a>
+    <a href="#activities">Hoạt động</a>
+    <a href="#contact">Liên hệ</a>
+  </nav>
+  
+ <div class="bg-blob blob-1"></div>
+ <div class="bg-blob blob-2"></div>
+  
+  <header class="hero">
+    <img src="logo.jpg" class="logo" alt="Logo">
+    <h1>NTS MEDIA CLUB</h1>
+    <p>Innovation • Information • Inspiration</p>
+  </header> 
+  
+<main>
+  <section id="members">
+      <div class="section-title reveal"><h2>Thành viên</h2></div>
+      <div class="member-grid">
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt6-1.xx.fbcdn.net/v/t39.30808-6/491005043_688054613729751_5703240162452259107_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH6wOL4KVcow0DJKTdQMKaYR83crSCCYBVHzdytIIJgFWh2OQiE8i-Bs33bVwKWsFGHh7UuPuWgZst62xsKG4bT&_nc_ohc=0BpArVAlqxEQ7kNvwFAW6Sa&_nc_oc=AdngUo9ZnlKQDvw_9-Qnabb2OVaFOZSxL5Hj88ZNliN6Wnf24hVwXnyTjjesx-v9C2U&_nc_zt=23&_nc_ht=scontent-nrt6-1.xx&_nc_gid=5SFAejR-iCA5hGJ8KyV-Tw&oh=00_AfsT4qffk6Mcg2vtsIWhUf_DD2qXyui_AbonhT9w6a6vaA&oe=6983F3C0" alt="Trần Thảo Vi">
+          <div class="member-overlay">
+            <h3>Trần Thảo Vi</h3>
+            <p>Chủ nhiệm CLB</p>
+            <small>Quản lý & định hướng</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-2.xx.fbcdn.net/v/t39.30808-6/490738410_688054793729733_1261705861441066170_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8E19ATmrTO88abjlLt0Sk9A3iveAMH-D0DeK94Awf4DPJINfMP9vJk-a1NMDs95yWNHoc45GL4yAVX0F0pn-s&_nc_ohc=rIQgKEgV29QQ7kNvwGRDl5W&_nc_oc=AdmA4Dhk2EF9RL-Iyw8roVcAYRVKQ19USk310NUd8CIT090UQQEugvRLN46XwRIcixk&_nc_zt=23&_nc_ht=scontent-nrt1-2.xx&_nc_gid=zxgZ0XCevDMQAQzq3WWe0Q&oh=00_Aftp5AS5GttdqJGzdH6aTQLx6b-PgxGVN4zWOLBtvbv_4w&oe=6983EFAF" alt="Kim Huệ">
+          <div class="member-overlay">
+            <h3>Kim Huệ</h3>
+            <p>Trưởng ban truyền thông</p>
+            <small>Chiến lược thương hiệu</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-1.xx.fbcdn.net/v/t39.30808-6/490716602_688054677063078_1600276226869067901_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHVRv97Q942eRauKuxG9xPaktntuugrFYOS2e266CsVg9iOhreGVjMebukCMdoZglCjALWBL5vS8DfYs9Annvi7&_nc_ohc=sjl3lTFomaEQ7kNvwEcI0u-&_nc_oc=AdnRsOIgEtMutxtgEnfWeCMVTK3UGcZZ3uBD8XAa9r_mSqxYzf2J-Vsp6i2yotfG1sU&_nc_zt=23&_nc_ht=scontent-nrt1-1.xx&_nc_gid=kl-jHip86jjtiVWrqAtcrg&oh=00_AftZojo9vKLxe3DzBNIBFTZyQQGgfMdthegC3fO95Vd2rA&oe=6983D53A" alt="Bảo Ngọc">
+          <div class="member-overlay">
+            <h3>Bảo Ngọc</h3>
+            <p>Ban truyền thông</p>
+            <small>Content & Design</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt6-1.xx.fbcdn.net/v/t39.30808-6/490551129_688054783729734_5147045104517928028_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGMbRM4b3lu4-exDY6Gdp0K_QZBUiSfBj79BkFSJJ8GPhqz3ANsO2sk8WvikUVFqcuwuyLPZWbIOYzmAnQElCo_&_nc_ohc=xd6l01aE2xAQ7kNvwFVVNq6&_nc_oc=Adlmy4zA3KZmzoixJ2kT6xDmWW-yx4sXpWl89-Q5sysa382wB7fRxmKCc1eBUtn1D48&_nc_zt=23&_nc_ht=scontent-nrt6-1.xx&_nc_gid=j78AJLsIHb35j0dZPMkVFA&oh=00_AfsUJXZ1tPJPIA--_kYUXDK15hhRISc7ejSC4yZAb8mymA&oe=6983DCFA" alt="Gia Hân">
+          <div class="member-overlay">
+            <h3>Gia Hân</h3>
+            <p>Ban truyền thông</p>
+            <small>Kỹ thuật & Media</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-2.xx.fbcdn.net/v/t39.30808-6/490672927_688054657063080_1238716621524101742_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGQ0RB1-J3UhaSZAfOX8ndkkZImX-4f_nyRkiZf7h_-fHroSwJW_CKwJP4oG5vUuMkLeO-2wecS7Y35Srh_5Q5G&_nc_ohc=mWT6RV5eAAgQ7kNvwH0vw0k&_nc_oc=AdkmBWiqWmdl2lWESwSRzuDZthDvZ6EL-YpISI_sMICneCtAoBoBD4ggxMdBuD4lgdE&_nc_zt=23&_nc_ht=scontent-nrt1-2.xx&_nc_gid=FZnKKRPldkW_RLc0kYkXxA&oh=00_Afs-RwOqLnUM8xbC50ADV-WYWFnZ1RGh7vxiEInN2zcsTA&oe=6983D7B0" alt="Thảo Nguyên">
+          <div class="member-overlay">
+            <h3>Thảo Nguyên</h3>
+            <p>Ban truyền thông</p>
+            <small>Quản lý & định hướng</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-1.xx.fbcdn.net/v/t39.30808-6/490146549_688054827063063_8411782437542448173_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEgqdw5ROGwzMA3iEV3bt-xTvC_zt1gylNO8L_O3WDKU-cEzwrztuCmuzP6oP3UUGDXfh-YAh8NGePWw1g2-k8x&_nc_ohc=aj3zcu6I8uUQ7kNvwFUDoiP&_nc_oc=AdlRku-pJQRdzEYXeRq0ycqfTlZsmjJBloP0QNL-Fiv5syLtBYtWS4L7gpe4NG-tZvQ&_nc_zt=23&_nc_ht=scontent-nrt1-1.xx&_nc_gid=AFbZvD8i4NN64-gTXdgWSg&oh=00_AfvpdzL6mZ-MlhxWRcXASS_dHgTGqslxKiqLQcbUSjSq1Q&oe=6983CB0D" alt="Tâm Như">
+          <div class="member-overlay">
+            <h3>Tâm Như</h3>
+            <p>Ban truyền thông</p>
+            <small>Content & Design</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-2.xx.fbcdn.net/v/t39.30808-6/490729693_688054700396409_2447577458456288188_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH4dGvoPcQPeLIptcJUKSurgIHnUOnKlVGAgedQ6cqVUdTFyZuFxdXPGPuEADk1DP1S0YdtuZ-Y6SyhAab0xC_I&_nc_ohc=auAn1sZTEYQQ7kNvwEAwELB&_nc_oc=Adk83D_8g81QrpJS-OfJjuj7wPYVbcsiXTVJzqxJSKkbm2QpeEN8uE1kwIUFmGZgVa4&_nc_zt=23&_nc_ht=scontent-nrt1-2.xx&_nc_gid=6pUaoAUlnCn_Q9SUWQoNsg&oh=00_Aftm0Vz_hvwHdm0WB_1r6-TVgONNCPqZf2JFAejjZtMEdw&oe=6983F24F" alt="Phương Uyên">
+          <div class="member-overlay">
+            <h3>Phương Uyên</h3>
+            <p>Ban truyền thông</p>
+            <small>Content & Kỹ thuật</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt6-1.xx.fbcdn.net/v/t39.30808-6/490118480_688054817063064_5520885896405746882_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFtrAufrRAnotq5ukrmyYt43VeLp1jrIlzdV4unWOsiXE7FYnj-ncrE7wzIDhZhW3JJCOcq4wAF_3SlnpXgKmDx&_nc_ohc=15X6FEV8vdsQ7kNvwGuZ0An&_nc_oc=AdnmGKQ0nOmneUyFMKjyBAh040OG4NQYgXOcqhHnORCjm9xF3E7W5vuR-ofKjJjt8F0&_nc_zt=23&_nc_ht=scontent-nrt6-1.xx&_nc_gid=aehQe5Ykoyrrtu_C78azjg&oh=00_AftQWS9MZzz69lNp4dxQEmJjb_5c06LBBlGWUwqvhgMkrA&oe=6983D6B1" alt="Mỹ Trinh">
+          <div class="member-overlay">
+            <h3>Mỹ Trinh</h3>
+            <p>Ban truyền thông</p>
+            <small>Content & Design</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-2.xx.fbcdn.net/v/t39.30808-6/490264680_688054743729738_9035418202478419668_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFcA5BiWnh3jIcHlqdgiNWUN1ZirJQS7uw3VmKslBLu7L-hdEvCWaKBgA86ZO11W4Bt2qQ_Th2Jqf7DYVRUAVmi&_nc_ohc=BTkb_KjQuP8Q7kNvwFjWq7U&_nc_oc=Adn5q09gOotPenpROH1cIZlSxremcBlOE9X77YWX06YbJYTUbLe9OdrenEhNjYCIhN0&_nc_zt=23&_nc_ht=scontent-nrt1-2.xx&_nc_gid=qJmLh9HPFOEzEAEkRb-skw&oh=00_Afv3QZK2QUOQ8qSeW8wtxwbr6G5gYN2QYIw71BIehSjwZw&oe=6983CDFC" alt="Khánh Quỳnh">
+          <div class="member-overlay">
+            <h3>Khánh Quỳnh</h3>
+            <p>Ban Content Writer</p>
+            <small>Sáng tạo nội dung văn bản</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt6-1.xx.fbcdn.net/v/t39.30808-6/490737039_688054710396408_3391171641416128766_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEdg9YNtO4ACdZ3jayuteCG7k2J1L9vVPbuTYnUv29U9rh-eYDJxpnfU-ua0hU7y94A6zEuf-x-qiuqD9k50Ad-&_nc_ohc=ftl6NYbVe0kQ7kNvwFthPBx&_nc_oc=AdkNeRP3DAumBeKzZmCDwrV3efrgWVxXHQJ3VPgpLW9iUTzm9pVDyYv1If1JYbL1Ylg&_nc_zt=23&_nc_ht=scontent-nrt6-1.xx&_nc_gid=nnN0fJ0x7xgNpezI52bWZQ&oh=00_AfuLIjawwhXhlodqOyQ2CHuksmpI9DraNVLXo5gXG3ScOA&oe=6983F5DC" alt="Ngọc Lài">
+          <div class="member-overlay">
+            <h3>Ngọc Lài</h3>
+            <p>Trưởng ban Design</p>
+            <small>Định hướng nghệ thuật</small>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <img src="https://scontent-nrt1-1.xx.fbcdn.net/v/t39.30808-6/491215240_688054630396416_7593973573442690184_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFixsACD7-BXz_RC-zjJ8pveAae3SRJRZp4Bp7dJElFmmUPjQpL-pTrXHlfGwukN8RufEWiXUINA-chXDWRD8nj&_nc_ohc=nQ8flt1LaE8Q7kNvwHDK1PF&_nc_oc=AdmsKfwThB5rqYTXWmUoiZmFIrXFZ7t7cakgpyf8-cgP5kqTYyAy7_CeTvMHUTaqU2A&_nc_zt=23&_nc_ht=scontent-nrt1-1.xx&_nc_gid=lwFwtN_a1HBjPGNaovAeDQ&oh=00_AfsLZ1ykQ64gq7ZWuwyvqtG_Y-aJTP376ejITgBquPOm3A&oe=6983D2D8" alt="Thúy An">
+          <div class="member-overlay">
+            <h3>Thúy An</h3>
+            <p>Ban Design</p>
+            <small>Thiết kế đồ họa</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <section id="activities">
+      <div class="section-title reveal"><h2>Hoạt động</h2></div>
+      <div class="activity-grid">
+        <div class="activity-card reveal">
+          <img src="hoaphuongdo.jpg" class="activity-img" alt="Event">
+          <div class="activity-text">
+            <h3>Event & School Media</h3>
+            <p>Truyền thông cho các sự kiện, phong trào của nhà trường.</p>
+          </div>
+        </div>
+
+        <div class="activity-card reveal">
+          <video class="activity-img" controls muted>
+             <source src="video.mp4" type="video/mp4">
+          </video>
+          <div class="activity-text">
+            <h3>Content Creation</h3>
+            <p>Viết bài, quay dựng video và thiết kế sáng tạo.</p>
+          </div>
+        </div>
+
+        <div class="activity-card reveal">
+          <img src="chupgiaykhen.jpg" class="activity-img" alt="Digital">
+          <div class="activity-text">
+            <h3>Digital Platform</h3>
+            <p>Quản lý Fanpage và các kênh thông tin chính thức.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+ <section id="contact" class="contact-section reveal">
+      <div class="contact-wrapper">
+        <div class="contact-message">
+          <h3 style="font-family:'Playfair Display'; font-size: 2rem; margin-bottom: 20px;">Our Message</h3>
+          <p>NTS Media Club là nơi kết nối sáng tạo, cảm xúc và thông tin. Lan tỏa niềm vui và giá trị tích cực đến cộng đồng.</p>
+        </div>
+        <div class="contact-box">
+          <div class="contact-item"><span>Email</span>ntsmediaclub@gmail.com</div>
+          <div class="contact-item"><span>Instagram</span><a href="#" style="color:#5c6cff; text-decoration:none;">@ntsmediaclub</a></div>
+          <div class="contact-item"><span>Chủ nhiệm</span>Trần Thảo Vi – 12A3</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 40px; font-size: 0.7rem; color: #bbb;">
+    © 2026 NTS MEDIA CLUB. ALL RIGHTS RESERVED.
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const handleScroll = () => {
+      reveals.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.9) el.classList.add('active');
+      });
+    };
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('load', handleScroll);
+  </script>
+</body>
+</html>
